@@ -1,5 +1,5 @@
 from math import degrees
-from pygame.transform import (smoothscale, rotozoom)
+from pygame.transform import (scale, rotate)
 from pygame.math import Vector2
 from pygame.surface import Surface
 from gameobject import GameObject
@@ -51,14 +51,14 @@ class Sprite2D(Object2D):
 
 	def __init__(self, image: Surface, transform: Transform2D = Transform2D(), global_only: bool = False, children: list[GameObject] = []):
 		super().__init__(transform, global_only, children)
-		self.image = image
+		self.image = image.convert_alpha()
 
 	def update(self, surface: Surface, delta: float = 1):
 		super().update(surface, delta)
 
 	def draw(self, surface: Surface, delta: float = 1):
-		transformed_image = rotozoom(
-				smoothscale(
+		transformed_image = rotate(
+				self.image if self.global_transform.scale == Vector2(1, 1) else scale(
 					self.image, 
 					(
 						self.image.get_width() * self.global_transform.scale.x, 
@@ -67,9 +67,7 @@ class Sprite2D(Object2D):
 				), 
 				degrees(
 					self.global_transform.rotation
-				),
-				1.0
+				)
 			)
 
 		surface.blit(transformed_image, self.global_transform.origin - Vector2(transformed_image.get_rect().center))
-

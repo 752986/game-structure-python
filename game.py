@@ -4,12 +4,15 @@ from gameobject import GameObject
 
 
 class Game:
-	def __init__(self, root_object: GameObject, clear_color: pygame.Color=pygame.Color(0, 0, 0)) -> None:
+	def set_state(self, root_object: GameObject = GameObject(), clear_color: pygame.Color = pygame.Color(0, 0, 0)):
+		self.root = root_object
+		self.clear_color = clear_color
+
+	def __init__(self):
 		pygame.init()
 		self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGHT))
 		self.clock = pygame.time.Clock()
-		self.root = root_object
-		self.clear_color = clear_color
+
 
 	def run(self):
 		running = True
@@ -20,7 +23,7 @@ class Game:
 
 			delta = self.clock.tick(settings.FRAMERATE) / 1000
 
-			#print(1/delta)
+			print(self.clock.get_fps())
 
 			self.root.update(self.screen, delta)
 
